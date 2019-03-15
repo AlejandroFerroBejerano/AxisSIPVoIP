@@ -11,7 +11,10 @@ include Capybara::DSL
 Capybara.run_server = false
 Capybara.default_driver = :selenium
 
-    
+input_array = ARGV
+
+
+
 ENV['NO_PROXY']="127.0.0.1"
 # driver = Selenium::WebDriver.for :firefox
 
@@ -22,7 +25,7 @@ def get_file(data_file = "")
     data_file = gets.chomp
   end
   return data_file
-end 
+end
 
 def check_file(data_source)
   return_value = false
@@ -34,27 +37,27 @@ def check_file(data_source)
   return return_value
 end
 
-data_source = "int_pal.csv"
+data_source = input_array[0]
 extensions = []
 account_url = "/admin/account_set.shtml?doAction=add"
 
 puts "\n Introduzca usuario \n"
 user = "root"
 puts "\n Introduzca password \n"
-pass = "Ggp08970"
+pass = "Eds-bur09001"
 # puts "\n Introduzca direccion ip remota del servidor sip. Ej 10.147.254.209 \n"
 # sipserver_ip = gets.chomp
-sipserver_ip = "10.147.254.109"
+sipserver_ip = "10.147.255.11"
 # puts "\n Introduzca direccion puerto remoto del servidor sip. Ej 5061 \n"
 # sipserver_port= gets.chomp
-sipserver_port= "5160"
+sipserver_port= "5060"
 
 if ARGV.empty?
   until check_file(data_source)
     puts "Please introduce a valid source extensions file \".csv\" \n"
     data_source = gets.chomp
   end
-else 
+else
   data_source = ARGV[0]
   check_file(data_source)
 end
@@ -65,7 +68,7 @@ end
 
 extensions.each do |ext|
   ext_id = ext["IP"].split('.')[2] + ext["IP"].split('.').last
-  ext_pass = ext_id
+  ext_pass = ext['SIPPASS']
   user = ext['USER']
   pass = ext['PASS']
   puts ext_pass
@@ -92,4 +95,4 @@ extensions.each do |ext|
   sleep(1)
   page.all("input[name='action-save-btn']").first.click
   sleep(1)
-end 
+end
