@@ -36,7 +36,7 @@ end
 
 data_source = "alt_csv/alt_edsbur.csv"
 extensions = []
-audio_settings = "/operator/audio.shtml"
+device_maintenance = "/admin/maintenance.shtml?"
 
 if ARGV.empty?
   until check_file(data_source)
@@ -55,53 +55,23 @@ end
 
 puts extensions.length
 
-count = 2
+count = 0
 while count < extensions.length do
   ext = extensions[count]
   user = ext['USER']
   pass = ext['PASS']
   ext_base_url = "http://" + user+"\:" + pass + "\@" + ext["IP"]
-  puts ext_base_url + audio_settings
-  visit ext_base_url + audio_settings
+  puts ext_base_url + device_maintenance
+  visit ext_base_url + device_maintenance
   # Esperamos a que cargue la web
   puts 'sleeping 3s'
   sleep(3)
-  #Audio Channels
-  #find('#root_Audio_DuplexMode').find(:xpath, 'option[3]').select_option
-  find("option[value='full']").select_option
-  sleep(1)
-  #Encoding
-  find("option[value='g711']").select_option
-  sleep(1)
-  #Bitrate
-  #find("option[value='64000']").select_option
-  #sleep(1)
-  #Save
-  find("input[value='Save']").click
+
+  #Restart
+  find("input[value='Restart']").click
   puts 'saving'
+  puts 'Pleace accept Js Pop-Up Alert'
+  page.driver.browser.switch_to.alert.accept
+  sleep(4)
   count +=1
 end
-
-#extensions.each do |ext|
-#  user = ext['USER']
-#  pass = ext['PASS']
-#  ext_base_url = "http://" + user+"\:" + pass + "\@" + ext["IP"]
-#  puts ext_base_url + audio_settings
-#  visit ext_base_url + audio_settings
-#  # Esperamos a que cargue la web
-#  puts 'sleeping 3s'
-#  sleep(3)
-#  #Audio Channels
-#  #find('#root_Audio_DuplexMode').find(:xpath, 'option[3]').select_option
-#  find("option[value='full']").select_option
-#  sleep(1)
-#  #Encoding
-#  find("option[value='g711']").select_option
-#  sleep(1)
-#  #Bitrate
-#  #find("option[value='64000']").select_option
-#  #sleep(1)
-#  #Save
-#  find("input[id='audio_SaveBtn']").click
-#  puts 'saving'
-#end

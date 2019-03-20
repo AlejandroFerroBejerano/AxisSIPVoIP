@@ -39,15 +39,12 @@ end
 
 data_source = input_array[0]
 extensions = []
-account_url = "/admin/account_set.shtml?doAction=add"
+account_url = "/admin//sip.shtml?"
 
 puts "\n Introduzca usuario \n"
 user = "root"
 puts "\n Introduzca password \n"
 pass = "Eds-bur09001"
-# puts "\n Introduzca direccion ip remota del servidor sip. Ej 10.147.254.209 \n"
-# sipserver_ip = gets.chomp
-sipserver_ip = "10.147.255.11"
 # puts "\n Introduzca direccion puerto remoto del servidor sip. Ej 5061 \n"
 # sipserver_port= gets.chomp
 sipserver_port= "5060"
@@ -67,35 +64,22 @@ CSV.foreach(data_source, headers: true) do |row|
 end
 
 extensions.each do |ext|
-  ext_id = ext["IP"].split('.')[2] + ext["IP"].split('.').last
-  ext_pass = ext['SIPPASS']
   user = ext['USER']
   pass = ext['PASS']
-  puts ext_pass
-  reg_addr = sipserver_ip + "\:"+ sipserver_port
-  #ext_name = ext["IDENTIFICADOR"] + "\-" +  ext["SITE CODE"] + "\-" + ext["DESCRIPTOR"]
-  ext_name = ext_id
+
   ext_url = "http://" + user+"\:" + pass + "\@" + ext["IP"] + account_url
   visit ext_url
   # Esperamos a que cargue la web
  sleep(6)
   page.all("input[type='text']").each do |input_text|
-    case input_text['name']
-      when "name-input"
-        input_text.set ext_name
-      when "accountcallerid-input"
-        input_text.set ext_id
-      when "userpubdom-input"
-        input_text.set sipserver_ip
-      when "userreg-input"
-        input_text.set reg_addr
+  case input_text['id']
+      when "portInput"
+        input_text.set sipserver_port
       end
   end
-  page.all("input[type='text'][name='userid-input']").first.set ext_id
-  page.all("input[type='password']").first.set ext_pass
-  #Set Account as default
-  page.all("input[type='checkbox']")[1].click
-  sleep(2)
-  page.all("input[name='action-save-btn']").first.click
-  sleep(1)
+  puts 'Selec the aviable codes and save'
+  sleep(3)
+  puts '4 Seconds To save'
+  sleep(4)
+
 end

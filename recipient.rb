@@ -11,7 +11,7 @@ include Capybara::DSL
 Capybara.run_server = false
 Capybara.default_driver = :selenium
 
-    
+
 ENV['NO_PROXY']="127.0.0.1"
 # driver = Selenium::WebDriver.for :firefox
 
@@ -22,7 +22,7 @@ def get_file(data_file = "")
     data_file = gets.chomp
   end
   return data_file
-end 
+end
 
 def check_file(data_source)
   return_value = false
@@ -46,25 +46,25 @@ puts "\n Introduzca password \n"
 pass = "Ggp08970"
 # puts "\n Introduzca un nombre para la cuenta del receptor (Recipient Name). Ej CCP_QUEUE \n"
 # recipient_name = gets.chomp
-recipient_name = "ESB_ESSA_PALAU"
+recipient_name = "CCP_PUESTO_4"
 # puts "\n Introduzca un número de extensión para la cola (Recipient Ext). Ej 254900 \n"
 # recipient_queue_ext = gets.chomp
-recipient_queue_ext = "14770"
+recipient_queue_ext = "2549004"
 # puts "\n Introduzca direccion ip remota del servidor sip. Ej 10.147.254.209 \n"
 # sipserver_ip = gets.chomp
-sipserver_ip = "10.147.254.109"
+sipserver_ip = "10.147.255.11"
 # puts "\n Introduzca direccion puerto remoto del servidor sip. Ej 5061 \n"
 # sipserver_port= gets.chomp
-sipserver_port= "5160"
+sipserver_port= "5060"
 
-event_name = "ButtonMakeCall"
+event_name = "BtnMakeCall"
 
 if ARGV.empty?
   until check_file(data_source)
     puts "Please introduce a valid source extensions file \".csv\" \n"
     data_source = gets.chomp
   end
-else 
+else
   data_source = ARGV[0]
   check_file(data_source)
 end
@@ -83,12 +83,12 @@ extensions.each do |ext|
   puts ext_pass
   reg_addr = sipserver_ip + "\:"+ sipserver_port
   ext_name = ext["SITE CODE"] + "\-" + ext["IDENTIFICADOR"] + "\-" + ext["DESCRIPTOR"]
-  ext_base_url = "http://" + user+"\:" + pass + "\@" + ext["IP"] 
+  ext_base_url = "http://" + user+"\:" + pass + "\@" + ext["IP"]
   ext_recipient_url = ext_base_url + recipient_url
   ext_event = ext_base_url + event_url
   visit ext_recipient_url
   # Esperamos a que cargue la web
-  sleep(8)
+  sleep(7)
   #Type SIP
   #page.all("select[id='recipientTemplates']").first.set "SIP"
   find("option[value='com.axis.recipient.sip']").select_option
@@ -106,14 +106,14 @@ extensions.each do |ext|
   find("#sip_clients_from").all('option').last.select_option
   #To SIP address
   page.all("input[id='sip_url']").first.set recipient_queue_ext
-  sleep(1)
+  sleep(6)
   #Save
   page.all("input[id='btnOK']").first.click
   sleep(1)
 
   #Make Event
   visit ext_event
-  sleep (8)
+  sleep (6)
   # Action Rule - Name
   page.all("input[id='ruleName']").first.set event_name + "\-" +recipient_queue_ext
   # Action Rule - Condition
@@ -124,7 +124,8 @@ extensions.each do |ext|
   find("option[value='sip_call']").select_option
   sleep(1)
   find("#recipientsip_call").find(:xpath, 'option[2]').select_option
+  sleep(8)
   #Save
   page.all("input[id='btnOK']").first.click
   sleep(1)
-end 
+end
